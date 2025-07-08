@@ -1,0 +1,87 @@
+package com.corsojava.esercizi.restcallisto;
+
+import java.time.LocalDateTime;
+import java.util.List;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("/book")
+public class BookController {
+	
+	private BookService bs;
+	
+     BookController(BookService bs) {
+		
+		this.bs = bs;
+	}
+	
+	@GetMapping("/getall")
+	public List<Book> getAll(){
+		return bs.getAll();
+	}
+	
+	@GetMapping("/author")
+	public ResponseEntity<DataWrapper<List<Book>>> getAuthor( String author){
+	    List<Book> l = bs.getBookAuthor(author);
+	    
+	    if(l == null) {
+			return new ResponseEntity<DataWrapper<List<Book>>>(DataWrapper.createWrapper(false, 401, "Not Found", "","GET", LocalDateTime.now().toString(), l), HttpStatus.NOT_FOUND);
+
+	    }
+	    
+		return new ResponseEntity<DataWrapper<List<Book>>>(DataWrapper.createWrapper(true, 100, "Succesfully Found", "","GET", LocalDateTime.now().toString(), l), HttpStatus.OK);
+
+	}
+	
+	@GetMapping("/title")
+	public ResponseEntity<DataWrapper<List<Book>>> getTitle(String title){
+		List<Book> l = bs.getBookTitle(title);
+		
+		if(l == null) {
+			return new ResponseEntity<DataWrapper<List<Book>>>(DataWrapper.createWrapper(false, 401, "Not Found", "","GET", LocalDateTime.now().toString(), l), HttpStatus.NOT_FOUND);
+		}
+		
+		return new ResponseEntity<DataWrapper<List<Book>>>(DataWrapper.createWrapper(true, 100, "Succesfully Found", "","GET", LocalDateTime.now().toString(), l), HttpStatus.OK);
+
+	}
+	
+	@PostMapping("/add")
+	public ResponseEntity<DataWrapper<Book>> add(@RequestBody Book b){
+		bs.add(b);
+		return new ResponseEntity<DataWrapper<Book>>(DataWrapper.createWrapper(true, 101, "Succesfully Created", "","POST", LocalDateTime.now().toString(), b), HttpStatus.CREATED);
+	}
+	
+	@DeleteMapping("/{id}")
+	public ResponseEntity<DataWrapper<Book>> del(@PathVariable Long id){
+		Book b = bs.del(id);
+		
+		if(b == null) {
+			return new ResponseEntity<DataWrapper<Book>>(DataWrapper.createWrapper(false, 401, "Not Found", "","DELETE", LocalDateTime.now().toString(), b), HttpStatus.NOT_FOUND);
+		}
+		
+		return new ResponseEntity<DataWrapper<Book>>(DataWrapper.createWrapper(true, 103, "Succesfully Deleted", "","DELETE", LocalDateTime.now().toString(), b), HttpStatus.OK); 
+		
+	}
+	
+	@PutMapping("/{id}")
+	public ResponseEntity<DataWrapper<Book>> edit(@RequestBody Book b){
+		
+		if(bs.edit(b) == null) {
+			return new ResponseEntity<DataWrapper<Book>>(DataWrapper.createWrapper(false, 401, "Not Found", "","PUT", LocalDateTime.now().toString(), b), HttpStatus.NOT_FOUND);
+		}
+		
+		return new ResponseEntity<DataWrapper<Book>>(DataWrapper.createWrapper(true, 102, "Succesfully Modified", "","PUT", LocalDateTime.now().toString(), b), HttpStatus.OK);
+	}
+	
+}

@@ -1,0 +1,53 @@
+package corsojava;
+
+import java.util.Scanner;
+
+public class EsercizioOperatori {
+
+	public static void main(String[] args) {
+		Scanner scanner = new Scanner(System.in);
+		
+		System.out.print("Inserisci il primo numero:");
+		int primo = scanner.nextInt();
+		
+		System.out.print("Inserisci il secondo numero:");
+		int secondo = scanner.nextInt();
+		
+		System.out.print("Inserisci il terzo numero:");
+		int terzo = scanner.nextInt();
+
+		// Primo esercizio 
+		int maggiore = primo;
+		if(secondo > maggiore) {
+			maggiore = secondo;
+		}else if(terzo > maggiore){
+			maggiore = terzo ;
+		}else {
+			System.out.println("numero non valido");
+		};
+		
+		System.out.println("Il numero piu' grande e':" + maggiore);
+		
+		// Secondo esercizio 
+		
+		if (primo + secondo > terzo ) {
+			System.out.println("La somma dei primi due numeri e' maggiore del terzo ");
+		}else {
+			System.out.println("La somma dei primi due numeri non e' maggiore del terzo ");
+		}
+		
+		// Terzo esercizio 
+		
+		if((primo % 2 == 0) || (secondo % 2 == 0 ) || (terzo % 2 == 0)) {
+			System.out.println("Uno dei numeri e' pari");
+		}else {
+			System.out.println("Nessuno dei numeri e' pari");
+		}
+		
+		
+		
+		scanner.close();
+	}
+}
+
+
